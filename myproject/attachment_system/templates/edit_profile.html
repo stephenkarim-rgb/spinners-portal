@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Modify Profile Matrix</title></head>
+<body style="font-family: Arial; margin: 40px;">
+    <h2>Update Structural Profile Mapping</h2>
+    <p style="color: orange; font-weight: bold;">Note: Core education data input properties can only be altered if granted permission by your Supervisor.</p>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Commit Structural Settings Saved</button>
+    </form>
+    <br>
+    <a href="{% url 'dashboard' %}">Cancel and Return</a>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Verification Required</title></head>
+<body style="font-family: Arial; margin: 40px;">
+    <h2>2FA Authentication Token Shield</h2>
+    <p>A verification code has been dispatched to your company email window logs.</p>
+    {% if error %}<p style="color: red;">{{ error }}</p>{% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>Enter 6-Digit OTP Token:</label><br>
+        <input type="text" name="otp" maxlength="6" required style="letter-spacing: 5px; font-size: 18px; padding: 5px;"><br><br>
+        <button type="submit">Verify & Proceed</button>
+    </form>
+</body>
+</html>

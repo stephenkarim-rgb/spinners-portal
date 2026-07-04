@@ -1,0 +1,24 @@
+from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
+
+class Command(BaseCommand):
+    help = 'Pre-installs the corporate system superuser accounts'
+
+    def handle(self, *args, **options):
+        User = get_user_model()
+        u = "SPINNERS"
+        p = "Locspinners1"
+        e = "admin@company.com"
+        
+        if not User.objects.filter(username=u).exists():
+            admin_user = User.objects.create_superuser(username=u, email=e, password=p)
+            admin_user.is_attachee = False
+            admin_user.is_verified = True
+            admin_user.save()
+            self.stdout.write(self.style.SUCCESS(f"Superuser '{u}' configured successfully."))
+        else:
+            admin_user = User.objects.get(username=u)
+            admin_user.set_password(p)
+            admin_user.is_attachee = False
+            admin_user.save()
+            self.stdout.write(self.style.SUCCESS(f"Credentials for user '{u}' matched and verified."))

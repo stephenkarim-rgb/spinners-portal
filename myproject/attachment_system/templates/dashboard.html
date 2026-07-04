@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head><title>Attachee Control Station</title></head>
+<body style="font-family: Arial; margin: 30px; line-height: 1.6;">
+    <div style="float: right;"><a href="{% url 'logout' %}">Log Out</a></div>
+    <h1>Welcome, {{ request.user.username }}</h1>
+
+    <div style="background: #f4f4f4; padding: 15px; border-radius: 5px;">
+        <h3>Attachee Details Matrix</h3>
+        <p><strong>Institution Name:</strong> {{ profile.school_name }}</p>
+        <p><strong>Admission Registration Profile:</strong> {{ profile.school_admission_number }}</p>
+        <p><strong>Course Field Study Program:</strong> {{ profile.program_of_study }}</p>
+        <p><strong>Storage Space Tracking:</strong> {{ storage_gb }} GB / 30.00 GB Used</p>
+        <a href="{% url 'edit_profile' %}" style="background: navy; color: white; padding: 5px 10px; text-decoration: none;">Update System Details</a>
+    </div>
+
+    <hr>
+
+    <h3>Directives Assigned By Administration</h3>
+    <ul>
+        {% for task in tasks %}
+            <li><strong>{{ task.task_title }}</strong>: {{ task.task_description }}</li>
+        {% empty %}
+            <li>No tasks assigned for today.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h3>Submit Daily Progress Performance Log</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ work_form.as_p }}
+        <button type="submit">Upload & Process Progress Log</button>
+    </form>
+
+    <hr>
+
+    <h3>Historical Workflow Log Entries</h3>
+    <table border="1" cellpadding="8" style="border-collapse: collapse; width: 100%;">
+        <tr style="background-color: navy; color: white;">
+            <th>Logging Date</th>
+            <th>Work Execution Log Summary Entries</th>
+            <th>Uploaded Deliverable Documents</th>
+        </tr>
+        {% for history in work_history %}
+        <tr>
+            <td>{{ history.date }}</td>
+            <td>{{ history.work_description }}</td>
+            <td>{% if history.uploaded_file %}<a href="{{ history.uploaded_file.url }}">View File</a>{% else %}None{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

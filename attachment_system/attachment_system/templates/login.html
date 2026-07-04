@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+<head><title>Company Login Portal</title></head>
+<body style="font-family: Arial; margin: 40px;">
+    <h2>Corporate Attachee System Sign In</h2>
+    {% if error %}<p style="color: red; font-weight: bold;">{{ error }}</p>{% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>Company Registered Email Address:</label><br>
+        <input type="email" name="email" required style="width:300px; padding:5px;"><br><br>
+        <label>Password Vault Code:</label><br>
+        <input type="password" name="password" required style="width:300px; padding:5px;"><br><br>
+        <button type="submit" style="padding: 7px 15px;">Authenticate Session</button>
+    </form>
+</body>
+</html>
