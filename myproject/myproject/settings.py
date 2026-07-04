@@ -27,9 +27,21 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-b-a!thr(gp_-oj-#8j&@0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-# Parse ALLOWED_HOSTS from environment or use defaults
-_allowed_hosts = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,.vercel.app,.onrender.com', cast=lambda v: [s.strip() for s in v.split(',')])
-ALLOWED_HOSTS = _allowed_hosts if _allowed_hosts else ['*']
+# Parse ALLOWED_HOSTS - be more permissive for production
+if DEBUG:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost']
+else:
+    # In production, allow all .vercel.app subdomains
+    ALLOWED_HOSTS = [
+        '*',  # Allow all hosts in production for Vercel
+        '.vercel.app',
+        '.onrender.com',
+        'localhost',
+        '127.0.0.1'
+    ]
+    # Override with env var if provided
+    if 'ALLOWED_HOSTS' in os.environ:
+        ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 
 # Application definition

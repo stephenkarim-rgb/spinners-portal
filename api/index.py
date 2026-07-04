@@ -12,18 +12,27 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
 
 # Setup Django
 import django
+from django.conf import settings
+
+# Configure for Vercel before Django setup
+os.environ['DEBUG'] = 'False'
+
 django.setup()
 
 from django.core.wsgi import get_wsgi_application
-from django.conf import settings
 
-# Override some settings for Vercel
-if 'VERCEL' in os.environ:
+# Override ALLOWED_HOSTS for Vercel
+if 'VERCEL' in os.environ or 'VERCEL_URL' in os.environ:
+    settings.ALLOWED_HOSTS = ['*']
     settings.DEBUG = False
-    settings.ALLOWED_HOSTS = ['*.vercel.app', 'localhost', '127.0.0.1']
+    # Set CSRF trusted origins
+    vercel_url = os.environ.get('VERCEL_URL', '')
+    if vercel_url:
+        settings.CSRF_TRUSTED_ORIGINS = [f'https://{vercel_url}', f'http://{vercel_url}']
 
 # Create WSGI application
 app = get_wsgi_application()
+
 
 
 
