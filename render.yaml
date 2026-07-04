@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: spinners-portal
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: >
+      pip install -r requirements.txt &&
+      cd myproject &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate
+    startCommand: cd myproject && gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "spinners-portal.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spinners-db
+          property: connectionString
+databases:
+  - name: spinners-db
+    plan: free
